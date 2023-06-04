@@ -1,0 +1,58 @@
+@page "/Character-Details/{Id:int}"
+@layout MainLayout
+
+<h1>Detalles del Personaje</h1>
+@if (character?.name != null)
+{
+    <div>
+        <h2>@character.name</h2>
+        <p>Estado: @character.status</p>
+        <p>Ubicación: @character.location.name</p>
+        <p>Género: @character.gender</p>
+        <img src="@character.image" alt="@character.name">
+    </div>
+}
+else
+{
+    <p>Cargando...</p>
+}
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    
+
+    private Character character = new Character();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpClient = new HttpClient();
+        character = await httpClient.GetFromJsonAsync<Character>($"https://rickandmortyapi.com/api/character/{Id}") ?? new Character();
+    }
+
+    public class Character
+    {
+        public string? name { get; set; }
+        public string? status { get; set; }
+        public Location? location { get; set; }
+        public string? gender { get; set; }
+        public string? image { get; set; }
+    }
+
+    public class Location
+    {
+        public string? name { get; set; }
+        public string? url { get; set; }
+    }
+}
+
+
+
+
+
+
+
+
+
